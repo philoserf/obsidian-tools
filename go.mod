@@ -1,3 +1,3 @@
-module obsidian-tools
+module obsidian-validate-plugin-manifest
 
-go 1.23.5
+go 1.24

@@ -1,0 +1,119 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+    silent: true
+
+  # Build tasks
+  build:
+    desc: Build validate-plugin-manifest
+    cmds:
+      - go build -o obsidian-validate-plugin-manifest ./validate-plugin-manifest
+
+  build:all:
+    desc: Build all tools
+    cmds:
+      - task: build
+
+  # Lint tasks
+  lint:
+    desc: Run all linters
+    cmds:
+      - task: lint:go
+      - task: lint:markdown
+
+  lint:fix:
+    desc: Run all linters with autofix
+    cmds:
+      - task: lint:go:fix
+      - task: lint:markdown:fix
+
+  lint:go:
+    desc: Lint Go code
+    cmds:
+      - golangci-lint run ./...
+
+  lint:go:fix:
+    desc: Lint and fix Go code
+    cmds:
+      - golangci-lint run --fix ./...
+      - gofumpt -l -w .
+
+  lint:markdown:
+    desc: Lint Markdown files
+    cmds:
+      - markdownlint *.md
+
+  lint:markdown:fix:
+    desc: Lint and fix Markdown files
+    cmds:
+      - markdownlint --fix *.md
+      - prettier --write "**/*.md"
+
+  # Format tasks
+  fmt:
+    desc: Format all code
+    cmds:
+      - task: fmt:go
+      - task: fmt:markdown
+
+  fmt:go:
+    desc: Format Go code
+    cmds:
+      - gofumpt -l -w .
+
+  fmt:markdown:
+    desc: Format Markdown files
+    cmds:
+      - prettier --write "**/*.md"
+
+  # Test tasks
+  test:
+    desc: Run all tests
+    cmds:
+      - go test -v ./...
+
+  test:cover:
+    desc: Run tests with coverage
+    cmds:
+      - go test -cover ./...
+
+  test:race:
+    desc: Run tests with race detection
+    cmds:
+      - go test -race ./...
+
+  # Clean tasks
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -f obsidian-validate-plugin-manifest
+
+  # Install tools
+  tools:install:
+    desc: Install required development tools
+    cmds:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - go install mvdan.cc/gofumpt@latest
+      - npm install -g markdownlint-cli
+      - npm install -g prettier
+
+  # Run tasks
+  run:
+    desc: Run the validator with default settings
+    cmds:
+      - go run ./validate-plugin-manifest/main.go
+
+  run:json:
+    desc: Run the validator with JSON output
+    cmds:
+      - go run ./validate-plugin-manifest/main.go --json
+
+  # Check for updates
+  update:deps:
+    desc: Update dependencies
+    cmds:
+      - go get -u ./...
+      - go mod tidy

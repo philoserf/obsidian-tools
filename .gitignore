@@ -1,0 +1,8 @@
+# Binaries and build artifacts
+obsidian-validate-plugin-manifest
+
+# Test binaries
+*.test
+
+# Coverage reports
+coverage.out
