@@ -6,3 +6,4 @@ obsidian-validate-plugin-manifest
 
 # Coverage reports
 coverage.out
+.task/

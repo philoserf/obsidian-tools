@@ -13,15 +13,24 @@ A tool to check an Obsidian plugin manifest against community rules as described
 
 ### Installation
 
+The easiest way to install is using Homebrew:
+
 ```bash
-# Build from source
-go build -o obsidian-validate-plugin-manifest ./validate-plugin-manifest
+# Clone the repository
+git clone https://github.com/yourusername/obsidian-tools.git
+cd obsidian-tools
 
-# Or use Task (recommended)
+# Install dependencies and build tools
+brew bundle
+
+# Build the tool
 task build
+```
 
-# Run from source
-go run ./validate-plugin-manifest/main.go
+You can also build directly with Go if you prefer:
+
+```bash
+go build -o obsidian-validate-plugin-manifest ./validate-plugin-manifest
 ```
 
 ### Usage
@@ -105,13 +114,19 @@ For validation with errors:
 
 ## Development
 
-This project uses [Task](https://taskfile.dev/) as a build tool. You can install it with:
+This project uses [Homebrew](https://brew.sh) for dependency management and [Task](https://taskfile.dev/) as a build tool.
+
+### Setting Up Development Environment
 
 ```bash
-go install github.com/go-task/task/v3/cmd/task@latest
+# Initial setup - installs all dependencies from Brewfile
+task setup
+
+# Verify your environment is correctly set up
+task verify
 ```
 
-Common commands:
+### Common Task Commands
 
 ```bash
 # Build the project
@@ -119,15 +134,33 @@ task build
 
 # Run all tests
 task test
+task test:cover  # Run with coverage report
+task test:race   # Run with race detection
 
 # Format code
-task fmt
+task format
 
 # Run linters
 task lint
 
-# Install required tools
-task tools:install
+# Fix linting and formatting issues
+task fix
+
+# Run the validator
+task run
+task run:json    # With JSON output
 ```
 
-Run `task --list-all` to see all available tasks. See [CLAUDE.md](CLAUDE.md) for more details on development guidelines.
+### Task Categories
+
+The Taskfile is organized into logical sections:
+
+1. **Setup Tasks**: `setup`, `verify`
+2. **Build Tasks**: `build`, `build:all`, `clean`
+3. **Quality Tasks**: `quality`, `fix`, `format`, `lint`
+4. **Test Tasks**: `test`, `test:cover`, `test:race`
+5. **Run Tasks**: `run`, `run:json`
+6. **Maintenance Tasks**: `update:deps`
+7. **CI/CD Tasks**: `ci`, `pre-commit`
+
+Run `task --list-all` to see all available tasks. See [CLAUDE.md](CLAUDE.md) for more detailed development guidelines.

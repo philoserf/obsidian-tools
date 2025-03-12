@@ -1,21 +1,46 @@
 # Obsidian Tools Development Guide
 
-## Task Runner
+## Project Setup
 
-This project uses [Task](https://taskfile.dev/) as a build tool. You can install it with:
+This project uses [Homebrew](https://brew.sh) to manage dependencies and [Task](https://taskfile.dev/) as a build tool.
+
+### Initial Setup
+
+To set up your development environment:
 
 ```bash
-go install github.com/go-task/task/v3/cmd/task@latest
+# Clone the repository
+git clone https://github.com/yourusername/obsidian-tools.git
+cd obsidian-tools
+
+# Install all dependencies using Homebrew
+brew bundle
+
+# Or use the convenience task (if you already have Task installed)
+task setup
 ```
+
+This command will install all required dependencies defined in the Brewfile, including:
+
+- Go
+- Task
+- golangci-lint
+- markdownlint-cli
+- prettier
+- Other development tools
 
 ### Common Task Commands
 
+- `task setup` - Setup development environment
+- `task verify` - Verify development tools are correctly installed
 - `task build` - Build the project
 - `task test` - Run all tests
-- `task fmt` - Format all code
+- `task format` - Format all code
 - `task lint` - Run all linters
-- `task lint:fix` - Run all linters with autofix
-- `task tools:install` - Install required development tools
+- `task fix` - Fix all linting and formatting issues
+- `task quality` - Run all linters and formatters
+- `task ci` - Run all checks (lint, format, test)
+- `task pre-commit` - Run checks before committing
 
 Run `task --list-all` to see all available tasks.
 
@@ -38,10 +63,11 @@ Run `task --list-all` to see all available tasks.
 
 ### Format and Lint
 
-- Format Go code: `gofumpt -l -w .`
-- Format Markdown: `prettier --write "**/*.md"`
-- Lint Go code: `golangci-lint run ./...`
-- Lint Markdown: `markdownlint *.md`
+- Format Go code: `task format:go` or `gofumpt -l -w .`
+- Format Markdown: `task format:markdown` or `prettier --write "**/*.md"`
+- Lint Go code: `task lint:go` or `golangci-lint run ./...`
+- Lint Markdown: `task lint:markdown` or `markdownlint *.md`
+- Fix all linting issues: `task lint:fix`
 
 ## Code Style Guidelines
 

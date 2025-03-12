@@ -1,119 +1,268 @@
+# Taskfile for Obsidian Tools
+# See https://taskfile.dev for documentation
 version: '3'
 
+# Global variables used across tasks
+vars:
+  BUILD_DIR: ./validate-plugin-manifest
+  BINARY_NAME: obsidian-validate-plugin-manifest
+
 tasks:
+  # =============================================================================
+  # DEFAULT TASK
+  # =============================================================================
   default:
+    desc: Display available tasks
     cmds:
       - task --list-all
     silent: true
 
-  # Build tasks
+  # =============================================================================
+  # DEVELOPMENT ENVIRONMENT SETUP
+  # =============================================================================
+  
+  # Setup the development environment with all required tools
+  setup:
+    desc: Setup development environment with all dependencies
+    cmds:
+      - echo "Installing dependencies from Brewfile..."
+      - brew bundle
+
+  # Verify that all tools are correctly installed and configured
+  verify:
+    desc: Verify development environment is correctly set up
+    cmds:
+      - echo "Verifying development tools..."
+      - go version
+      - golangci-lint --version
+      - gofumpt --version
+      - markdownlint --version
+      - prettier --version
+      - task --version
+
+  # =============================================================================
+  # BUILD TASKS
+  # =============================================================================
+  
+  # Primary build task for the plugin manifest validator
   build:
-    desc: Build validate-plugin-manifest
+    desc: Build the validate-plugin-manifest tool
     cmds:
-      - go build -o obsidian-validate-plugin-manifest ./validate-plugin-manifest
+      - echo "Building {{.BINARY_NAME}}..."
+      - go build -o {{.BINARY_NAME}} {{.BUILD_DIR}}
+    sources:
+      - "{{.BUILD_DIR}}/**/*.go"
+      - "go.mod"
+      - "go.sum"
+    generates:
+      - "{{.BINARY_NAME}}"
 
+  # Build all tools in the repository (for future expansion)
   build:all:
-    desc: Build all tools
+    desc: Build all tools in the repository
     cmds:
+      - echo "Building all tools..."
       - task: build
+      # Add future tools here as they are created
 
-  # Lint tasks
+  # Clean build artifacts
+  clean:
+    desc: Remove all build artifacts
+    cmds:
+      - echo "Cleaning build artifacts..."
+      - rm -f {{.BINARY_NAME}}
+
+  # =============================================================================
+  # CODE QUALITY TASKS
+  # =============================================================================
+  
+  # High-level quality task for running all checks
+  quality:
+    desc: Run all code quality checks (lint and format)
+    cmds:
+      - echo "Running all code quality checks..."
+      - task: lint
+      - task: format
+
+  # Fix all issues automatically
+  fix:
+    desc: Automatically fix all linting and formatting issues
+    cmds:
+      - echo "Fixing all code quality issues..."
+      - task: lint:fix
+      - task: format
+
+  # =============================================================================
+  # LINT TASKS
+  # =============================================================================
+  
+  # Run all linters
   lint:
     desc: Run all linters
     cmds:
+      - echo "Running all linters..."
       - task: lint:go
       - task: lint:markdown
 
+  # Fix linting issues automatically
   lint:fix:
-    desc: Run all linters with autofix
+    desc: Automatically fix linting issues
     cmds:
+      - echo "Fixing linting issues..."
       - task: lint:go:fix
       - task: lint:markdown:fix
 
+  # Lint Go code
   lint:go:
     desc: Lint Go code
+    sources:
+      - "**/*.go"
+      - ".golangci.yml"
     cmds:
       - golangci-lint run ./...
 
+  # Fix Go linting issues
   lint:go:fix:
-    desc: Lint and fix Go code
+    desc: Automatically fix Go linting issues
+    sources:
+      - "**/*.go"
+      - ".golangci.yml"
     cmds:
       - golangci-lint run --fix ./...
       - gofumpt -l -w .
 
+  # Lint Markdown files
   lint:markdown:
     desc: Lint Markdown files
+    sources:
+      - "**/*.md"
+      - ".markdownlint.json"
     cmds:
       - markdownlint *.md
 
+  # Fix Markdown linting issues
   lint:markdown:fix:
-    desc: Lint and fix Markdown files
+    desc: Automatically fix Markdown linting issues
+    sources:
+      - "**/*.md"
+      - ".markdownlint.json"
     cmds:
       - markdownlint --fix *.md
       - prettier --write "**/*.md"
 
-  # Format tasks
-  fmt:
-    desc: Format all code
+  # =============================================================================
+  # FORMAT TASKS
+  # =============================================================================
+  
+  # Format all code
+  format:
+    desc: Format all code according to style guidelines
     cmds:
-      - task: fmt:go
-      - task: fmt:markdown
+      - echo "Formatting all code..."
+      - task: format:go
+      - task: format:markdown
 
-  fmt:go:
+  # Format Go code
+  format:go:
     desc: Format Go code
+    sources:
+      - "**/*.go"
     cmds:
       - gofumpt -l -w .
 
-  fmt:markdown:
+  # Format Markdown files
+  format:markdown:
     desc: Format Markdown files
+    sources:
+      - "**/*.md"
     cmds:
       - prettier --write "**/*.md"
 
-  # Test tasks
+  # =============================================================================
+  # TEST TASKS
+  # =============================================================================
+  
+  # Run all tests
   test:
     desc: Run all tests
+    sources:
+      - "**/*.go"
+      - "go.mod"
+      - "go.sum"
     cmds:
+      - echo "Running tests..."
       - go test -v ./...
 
+  # Run tests with coverage
   test:cover:
-    desc: Run tests with coverage
+    desc: Run tests with coverage report
+    sources:
+      - "**/*.go"
+      - "go.mod"
+      - "go.sum"
     cmds:
+      - echo "Running tests with coverage..."
       - go test -cover ./...
 
+  # Run tests with race detection
   test:race:
-    desc: Run tests with race detection
+    desc: Run tests with race condition detection
+    sources:
+      - "**/*.go"
+      - "go.mod"
+      - "go.sum"
     cmds:
+      - echo "Running tests with race detection..."
       - go test -race ./...
 
-  # Clean tasks
-  clean:
-    desc: Clean build artifacts
-    cmds:
-      - rm -f obsidian-validate-plugin-manifest
-
-  # Install tools
-  tools:install:
-    desc: Install required development tools
-    cmds:
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-      - go install mvdan.cc/gofumpt@latest
-      - npm install -g markdownlint-cli
-      - npm install -g prettier
-
-  # Run tasks
+  # =============================================================================
+  # RUN TASKS
+  # =============================================================================
+  
+  # Run the validator with default settings
   run:
     desc: Run the validator with default settings
+    deps: [build]
     cmds:
-      - go run ./validate-plugin-manifest/main.go
+      - echo "Running {{.BINARY_NAME}}..."
+      - ./{{.BINARY_NAME}}
 
+  # Run the validator with JSON output
   run:json:
     desc: Run the validator with JSON output
+    deps: [build]
     cmds:
-      - go run ./validate-plugin-manifest/main.go --json
+      - echo "Running {{.BINARY_NAME}} with JSON output..."
+      - ./{{.BINARY_NAME}} --json
 
-  # Check for updates
+  # =============================================================================
+  # MAINTENANCE TASKS
+  # =============================================================================
+  
+  # Update dependencies
   update:deps:
-    desc: Update dependencies
+    desc: Update all Go dependencies
     cmds:
+      - echo "Updating dependencies..."
       - go get -u ./...
       - go mod tidy
+      
+  # =============================================================================
+  # CI/CD TASKS
+  # =============================================================================
+  
+  # CI task for continuous integration
+  ci:
+    desc: Run all checks for CI/CD pipelines
+    cmds:
+      - echo "Running CI checks..."
+      - task: quality
+      - task: test
+
+  # Pre-commit check to run before committing changes
+  pre-commit:
+    desc: Run checks before committing
+    cmds:
+      - echo "Running pre-commit checks..."
+      - task: quality
+      - task: test
