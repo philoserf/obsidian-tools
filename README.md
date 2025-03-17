@@ -163,4 +163,4 @@ The Taskfile is organized into logical sections:
 6. **Maintenance Tasks**: `update:deps`
 7. **CI/CD Tasks**: `ci`, `pre-commit`
 
-Run `task --list-all` to see all available tasks. See [CLAUDE.md](CLAUDE.md) for more detailed development guidelines.
+Run `task --list-all` to see all available tasks. See [copilot indtructiond](.github/copilot-instructions.md) for more detailed development guidelines.
