@@ -101,7 +101,9 @@ func validateID(manifest *Manifest, result *ValidationResult) {
 	}
 
 	if !idRegex.MatchString(manifest.ID) {
-		result.AddError("Plugin ID must contain only lowercase alphanumeric characters, dashes, and underscores")
+		result.AddError(
+			"Plugin ID must contain only lowercase alphanumeric characters, dashes, and underscores",
+		)
 	}
 }
 
@@ -209,7 +211,12 @@ func main() {
 	flag.StringVar(&manifestPath, "manifest", "manifest.json", "Path to manifest.json file")
 	flag.BoolVar(&showVersion, "version", false, "Show version information")
 	flag.BoolVar(&jsonOutput, "json", false, "Output results in JSON format")
-	flag.BoolVar(&quiet, "quiet", false, "Suppress informational output (only shows errors/warnings)")
+	flag.BoolVar(
+		&quiet,
+		"quiet",
+		false,
+		"Suppress informational output (only shows errors/warnings)",
+	)
 	flag.Parse()
 
 	if showVersion {

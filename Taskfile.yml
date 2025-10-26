@@ -1,6 +1,6 @@
 # Taskfile for Obsidian Tools
 # See https://taskfile.dev for documentation
-version: '3'
+version: "3"
 
 # Global variables used across tasks
 vars:
@@ -20,7 +20,7 @@ tasks:
   # =============================================================================
   # DEVELOPMENT ENVIRONMENT SETUP
   # =============================================================================
-  
+
   # Setup the development environment with all required tools
   setup:
     desc: Setup development environment with all dependencies
@@ -43,7 +43,7 @@ tasks:
   # =============================================================================
   # BUILD TASKS
   # =============================================================================
-  
+
   # Primary build task for the plugin manifest validator
   build:
     desc: Build the validate-plugin-manifest tool
@@ -75,7 +75,7 @@ tasks:
   # =============================================================================
   # CODE QUALITY TASKS
   # =============================================================================
-  
+
   # High-level quality task for running all checks
   quality:
     desc: Run all code quality checks (lint and format)
@@ -95,7 +95,7 @@ tasks:
   # =============================================================================
   # LINT TASKS
   # =============================================================================
-  
+
   # Run all linters
   lint:
     desc: Run all linters
@@ -153,7 +153,7 @@ tasks:
   # =============================================================================
   # FORMAT TASKS
   # =============================================================================
-  
+
   # Format all code
   format:
     desc: Format all code according to style guidelines
@@ -181,7 +181,7 @@ tasks:
   # =============================================================================
   # TEST TASKS
   # =============================================================================
-  
+
   # Run all tests
   test:
     desc: Run all tests
@@ -218,7 +218,7 @@ tasks:
   # =============================================================================
   # RUN TASKS
   # =============================================================================
-  
+
   # Run the validator with default settings
   run:
     desc: Run the validator with default settings
@@ -238,7 +238,7 @@ tasks:
   # =============================================================================
   # MAINTENANCE TASKS
   # =============================================================================
-  
+
   # Update dependencies
   update:deps:
     desc: Update all Go dependencies
@@ -246,11 +246,11 @@ tasks:
       - echo "Updating dependencies..."
       - go get -u ./...
       - go mod tidy
-      
+
   # =============================================================================
   # CI/CD TASKS
   # =============================================================================
-  
+
   # CI task for continuous integration
   ci:
     desc: Run all checks for CI/CD pipelines
