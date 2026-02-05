@@ -8,27 +8,18 @@ vars:
   BINARY_NAME: obsidian-validate-plugin-manifest
 
 tasks:
-  # =============================================================================
-  # DEFAULT TASK
-  # =============================================================================
   default:
     desc: Display available tasks
     cmds:
       - task --list-all
     silent: true
 
-  # =============================================================================
-  # DEVELOPMENT ENVIRONMENT SETUP
-  # =============================================================================
-
-  # Setup the development environment with all required tools
   setup:
     desc: Setup development environment with all dependencies
     cmds:
       - echo "Installing dependencies from Brewfile..."
       - brew bundle
 
-  # Verify that all tools are correctly installed and configured
   verify:
     desc: Verify development environment is correctly set up
     cmds:
@@ -36,15 +27,9 @@ tasks:
       - go version
       - golangci-lint --version
       - gofumpt --version
-      - markdownlint --version
       - prettier --version
       - task --version
 
-  # =============================================================================
-  # BUILD TASKS
-  # =============================================================================
-
-  # Primary build task for the plugin manifest validator
   build:
     desc: Build the validate-plugin-manifest tool
     cmds:
@@ -57,26 +42,18 @@ tasks:
     generates:
       - "{{.BINARY_NAME}}"
 
-  # Build all tools in the repository (for future expansion)
   build:all:
     desc: Build all tools in the repository
     cmds:
       - echo "Building all tools..."
       - task: build
-      # Add future tools here as they are created
 
-  # Clean build artifacts
   clean:
     desc: Remove all build artifacts
     cmds:
       - echo "Cleaning build artifacts..."
       - rm -f {{.BINARY_NAME}}
 
-  # =============================================================================
-  # CODE QUALITY TASKS
-  # =============================================================================
-
-  # High-level quality task for running all checks
   quality:
     desc: Run all code quality checks (lint and format)
     cmds:
@@ -84,7 +61,6 @@ tasks:
       - task: lint
       - task: format
 
-  # Fix all issues automatically
   fix:
     desc: Automatically fix all linting and formatting issues
     cmds:
@@ -92,27 +68,18 @@ tasks:
       - task: lint:fix
       - task: format
 
-  # =============================================================================
-  # LINT TASKS
-  # =============================================================================
-
-  # Run all linters
   lint:
     desc: Run all linters
     cmds:
       - echo "Running all linters..."
       - task: lint:go
-      - task: lint:markdown
 
-  # Fix linting issues automatically
   lint:fix:
     desc: Automatically fix linting issues
     cmds:
       - echo "Fixing linting issues..."
       - task: lint:go:fix
-      - task: lint:markdown:fix
 
-  # Lint Go code
   lint:go:
     desc: Lint Go code
     sources:
@@ -121,7 +88,6 @@ tasks:
     cmds:
       - golangci-lint run ./...
 
-  # Fix Go linting issues
   lint:go:fix:
     desc: Automatically fix Go linting issues
     sources:
@@ -131,30 +97,6 @@ tasks:
       - golangci-lint run --fix ./...
       - gofumpt -l -w .
 
-  # Lint Markdown files
-  lint:markdown:
-    desc: Lint Markdown files
-    sources:
-      - "**/*.md"
-      - ".markdownlint.json"
-    cmds:
-      - markdownlint *.md
-
-  # Fix Markdown linting issues
-  lint:markdown:fix:
-    desc: Automatically fix Markdown linting issues
-    sources:
-      - "**/*.md"
-      - ".markdownlint.json"
-    cmds:
-      - markdownlint --fix *.md
-      - prettier --write "**/*.md"
-
-  # =============================================================================
-  # FORMAT TASKS
-  # =============================================================================
-
-  # Format all code
   format:
     desc: Format all code according to style guidelines
     cmds:
@@ -162,7 +104,6 @@ tasks:
       - task: format:go
       - task: format:markdown
 
-  # Format Go code
   format:go:
     desc: Format Go code
     sources:
@@ -170,7 +111,6 @@ tasks:
     cmds:
       - gofumpt -l -w .
 
-  # Format Markdown files
   format:markdown:
     desc: Format Markdown files
     sources:
@@ -178,11 +118,6 @@ tasks:
     cmds:
       - prettier --write "**/*.md"
 
-  # =============================================================================
-  # TEST TASKS
-  # =============================================================================
-
-  # Run all tests
   test:
     desc: Run all tests
     sources:
@@ -193,7 +128,6 @@ tasks:
       - echo "Running tests..."
       - go test -v ./...
 
-  # Run tests with coverage
   test:cover:
     desc: Run tests with coverage report
     sources:
@@ -204,7 +138,6 @@ tasks:
       - echo "Running tests with coverage..."
       - go test -cover ./...
 
-  # Run tests with race detection
   test:race:
     desc: Run tests with race condition detection
     sources:
@@ -215,11 +148,6 @@ tasks:
       - echo "Running tests with race detection..."
       - go test -race ./...
 
-  # =============================================================================
-  # RUN TASKS
-  # =============================================================================
-
-  # Run the validator with default settings
   run:
     desc: Run the validator with default settings
     deps: [build]
@@ -227,7 +155,6 @@ tasks:
       - echo "Running {{.BINARY_NAME}}..."
       - ./{{.BINARY_NAME}}
 
-  # Run the validator with JSON output
   run:json:
     desc: Run the validator with JSON output
     deps: [build]
@@ -235,11 +162,6 @@ tasks:
       - echo "Running {{.BINARY_NAME}} with JSON output..."
       - ./{{.BINARY_NAME}} --json
 
-  # =============================================================================
-  # MAINTENANCE TASKS
-  # =============================================================================
-
-  # Update dependencies
   update:deps:
     desc: Update all Go dependencies
     cmds:
@@ -247,11 +169,6 @@ tasks:
       - go get -u ./...
       - go mod tidy
 
-  # =============================================================================
-  # CI/CD TASKS
-  # =============================================================================
-
-  # CI task for continuous integration
   ci:
     desc: Run all checks for CI/CD pipelines
     cmds:
@@ -259,7 +176,6 @@ tasks:
       - task: quality
       - task: test
 
-  # Pre-commit check to run before committing changes
   pre-commit:
     desc: Run checks before committing
     cmds:

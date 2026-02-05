@@ -1,3 +1,3 @@
 module obsidian-validate-plugin-manifest
 
-go 1.24
+go 1.25
