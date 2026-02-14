@@ -1,0 +1,6 @@
+_extends: .github
+
+repository:
+  name: obsidian-tools
+  description: "A collection of tools for use with Obsidian"
+  homepage: https://philoserf.github.io/obsidian-tools/
