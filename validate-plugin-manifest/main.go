@@ -47,7 +47,7 @@ func (vr *ValidationResult) AddError(message string) {
 }
 
 // AddErrorf adds a formatted error message to the validation result.
-func (vr *ValidationResult) AddErrorf(format string, args ...interface{}) {
+func (vr *ValidationResult) AddErrorf(format string, args ...any) {
 	vr.Errors = append(vr.Errors, fmt.Sprintf(format, args...))
 }
 
@@ -57,7 +57,7 @@ func (vr *ValidationResult) AddWarning(message string) {
 }
 
 // AddWarningf adds a formatted warning message to the validation result.
-func (vr *ValidationResult) AddWarningf(format string, args ...interface{}) {
+func (vr *ValidationResult) AddWarningf(format string, args ...any) {
 	vr.Warnings = append(vr.Warnings, fmt.Sprintf(format, args...))
 }
 
