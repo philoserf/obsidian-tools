@@ -93,7 +93,7 @@ Renderers write to an `io.Writer`, not stdout directly, so tests can drive a `by
 
 ## Releases
 
-No release automation. Built locally; the binary is gitignored. The Jekyll Pages workflow publishes the README only and is not part of the build pipeline.
+No release automation. Built locally; the binary is gitignored.
 
 Dependabot watches `gomod` and `github-actions` weekly (`.github/dependabot.yml`).
 

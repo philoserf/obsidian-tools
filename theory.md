@@ -30,8 +30,6 @@ The most consequential external boundary is the one that the code cannot enforce
 
 The workspace-level structure suggests a second seam that does not yet exist. The repo is named `obsidian-tools` (plural), and `CLAUDE.md` describes a "package-per-tool" convention. But the `Taskfile.yml` builds exactly one binary, and the only tool present is the validator. The plural in the name is aspirational; the structure is provisioning for tools that have not arrived. A maintainer adding a second tool needs to know that the `build`/`run`/`BINARY_NAME` task targets are hard-wired to the one current binary and will need to be generalized.
 
-The Jekyll GitHub Pages workflow is incidental. It publishes the README at a `github.io` URL and has no other interaction with the system. Treat it as packaging, not as part of the theory.
-
 ## What's easy, what's not
 
 The system is shaped to absorb new field-level rules cheaply. The recipe — add a `validateThing` function, push messages onto the result, append a call inside `ValidateManifest`, update test counts — is mechanical and isolated. A new banned URL, a new disallowed substring, a new length limit, all fit naturally.
