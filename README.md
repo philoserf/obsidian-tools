@@ -7,6 +7,11 @@ A collection of tools for Obsidian plugin development and validation.
 - [Validate Plugin Manifest](#validate-plugin-manifest)
 - [Development](#development)
 
+## Project documentation
+
+- [Walkthrough](walkthrough.md) — linear, executable tour of the code
+- [Theory](theory.md) — the conceptual model a maintainer needs to hold in mind
+
 ## Validate Plugin Manifest
 
 A tool to check an Obsidian plugin manifest against community rules as described in the [Validate Plugin Entry workflow](https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/validate-plugin-entry.yml) of the obsidianmd/obsidian-releases project.
