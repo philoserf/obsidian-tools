@@ -65,24 +65,10 @@ The validator checks that manifest files comply with the Obsidian community plug
 
 ### Testing
 
-Run the unit tests with:
-
 ```bash
-# Using Go directly
-go test ./validate-plugin-manifest
-
-# Or using Task (recommended)
-task test
-```
-
-For more detailed test output:
-
-```bash
-# Using Go directly
-go test -v ./validate-plugin-manifest
-
-# Or using Task
-task test -- -v
+task test            # or: go test ./validate-plugin-manifest
+task test -- -v      # verbose
+task test -- -cover  # with coverage
 ```
 
 ### Example Output
@@ -114,53 +100,15 @@ For validation with errors:
 
 ## Development
 
-This project uses [Homebrew](https://brew.sh) for dependency management and [Task](https://taskfile.dev/) as a build tool.
-
-### Setting Up Development Environment
+This project uses [Homebrew](https://brew.sh) for dev dependencies and [Task](https://taskfile.dev/) as a build tool. Initial setup: `brew bundle`.
 
 ```bash
-# Initial setup - installs all dependencies from Brewfile
-task setup
-
-# Verify your environment is correctly set up
-task verify
+task build           # Build the binary
+task test            # Run tests (pass flags via `--`, e.g. `task test -- -cover`)
+task lint            # Run linters
+task fix             # Auto-fix lint and formatting (Go + Markdown)
+task run             # Run the validator (pass flags via `--`, e.g. `task run -- --json`)
+task ci              # lint + test
 ```
 
-### Common Task Commands
-
-```bash
-# Build the project
-task build
-
-# Run all tests
-task test
-task test:cover  # Run with coverage report
-task test:race   # Run with race detection
-
-# Format code
-task format
-
-# Run linters
-task lint
-
-# Fix linting and formatting issues
-task fix
-
-# Run the validator
-task run
-task run:json    # With JSON output
-```
-
-### Task Categories
-
-The Taskfile is organized into logical sections:
-
-1. **Setup Tasks**: `setup`, `verify`
-2. **Build Tasks**: `build`, `build:all`, `clean`
-3. **Quality Tasks**: `quality`, `fix`, `format`, `lint`
-4. **Test Tasks**: `test`, `test:cover`, `test:race`
-5. **Run Tasks**: `run`, `run:json`
-6. **Maintenance Tasks**: `update:deps`
-7. **CI/CD Tasks**: `ci`, `pre-commit`
-
-Run `task --list-all` to see all available tasks. See [copilot instructions](.github/copilot-instructions.md) for more detailed development guidelines.
+Run `task` (or `task --list-all`) for the full list.

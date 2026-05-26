@@ -8,21 +8,18 @@ A collection of tools for Obsidian plugin development and validation. Currently 
 
 ## Build & Development Commands
 
-This project uses [Task](https://taskfile.dev/) as its build tool. First-time setup: `task setup` (runs `brew bundle`).
+This project uses [Task](https://taskfile.dev/). First-time setup: `brew bundle`.
 
 ```bash
-task build           # Build the validator binary
-task test            # Run all tests (verbose)
-task test:cover      # Tests with coverage report
-task test:race       # Tests with race detection
-task lint            # Run all linters (Go + Markdown)
-task fix             # Auto-fix linting and formatting issues
-task ci              # Full CI pipeline (quality + test)
-task run             # Run the validator
-task run:json        # Run with JSON output
+task build  # Build the binary
+task test   # Run tests
+task lint   # golangci-lint
+task fix    # Auto-fix lint + format (Go via gofumpt, Markdown via prettier)
+task run    # Run the validator
+task ci     # lint + test
 ```
 
-Pass extra flags via `--`: `task test -- -run TestValidateManifest`
+Pass extra flags via `--`: `task test -- -run TestValidateManifest -cover`, `task run -- --json`.
 
 Direct Go commands also work: `go test -v ./validate-plugin-manifest`
 

@@ -2,183 +2,52 @@
 # See https://taskfile.dev for documentation
 version: "3"
 
-# Global variables used across tasks
 vars:
   BUILD_DIR: ./validate-plugin-manifest
   BINARY_NAME: obsidian-validate-plugin-manifest
 
 tasks:
   default:
-    desc: Display available tasks
+    desc: List available tasks
     cmds:
       - task --list-all
     silent: true
 
-  setup:
-    desc: Setup development environment with all dependencies
-    cmds:
-      - echo "Installing dependencies from Brewfile..."
-      - brew bundle
-
-  verify:
-    desc: Verify development environment is correctly set up
-    cmds:
-      - echo "Verifying development tools..."
-      - go version
-      - golangci-lint --version
-      - gofumpt --version
-      - prettier --version
-      - task --version
-
   build:
-    desc: Build the validate-plugin-manifest tool
+    desc: Build the validator binary
     cmds:
-      - echo "Building {{.BINARY_NAME}}..."
       - go build -o {{.BINARY_NAME}} {{.BUILD_DIR}}
     sources:
       - "{{.BUILD_DIR}}/**/*.go"
       - "go.mod"
-      - "go.sum"
     generates:
       - "{{.BINARY_NAME}}"
 
-  build:all:
-    desc: Build all tools in the repository
+  test:
+    desc: Run tests (extra flags via `--`, e.g. `task test -- -cover`)
     cmds:
-      - echo "Building all tools..."
-      - task: build
-
-  clean:
-    desc: Remove all build artifacts
-    cmds:
-      - echo "Cleaning build artifacts..."
-      - rm -f {{.BINARY_NAME}}
-
-  quality:
-    desc: Run all code quality checks (lint and format)
-    cmds:
-      - echo "Running all code quality checks..."
-      - task: lint
-      - task: format
-
-  fix:
-    desc: Automatically fix all linting and formatting issues
-    cmds:
-      - echo "Fixing all code quality issues..."
-      - task: lint:fix
-      - task: format
+      - go test {{.CLI_ARGS}} ./...
 
   lint:
-    desc: Run all linters
-    cmds:
-      - echo "Running all linters..."
-      - task: lint:go
-
-  lint:fix:
-    desc: Automatically fix linting issues
-    cmds:
-      - echo "Fixing linting issues..."
-      - task: lint:go:fix
-
-  lint:go:
-    desc: Lint Go code
-    sources:
-      - "**/*.go"
-      - ".golangci.yml"
+    desc: Run linters
     cmds:
       - golangci-lint run ./...
 
-  lint:go:fix:
-    desc: Automatically fix Go linting issues
-    sources:
-      - "**/*.go"
-      - ".golangci.yml"
+  fix:
+    desc: Auto-fix lint and formatting issues (Go + Markdown)
     cmds:
       - golangci-lint run --fix ./...
       - gofumpt -l -w .
-
-  format:
-    desc: Format all code according to style guidelines
-    cmds:
-      - echo "Formatting all code..."
-      - task: format:go
-      - task: format:markdown
-
-  format:go:
-    desc: Format Go code
-    sources:
-      - "**/*.go"
-    cmds:
-      - gofumpt -l -w .
-
-  format:markdown:
-    desc: Format Markdown files
-    sources:
-      - "**/*.md"
-    cmds:
       - prettier --write "**/*.md"
 
-  test:
-    desc: Run all tests
-    sources:
-      - "**/*.go"
-      - "go.mod"
-      - "go.sum"
-    cmds:
-      - echo "Running tests..."
-      - go test -v ./...
-
-  test:cover:
-    desc: Run tests with coverage report
-    sources:
-      - "**/*.go"
-      - "go.mod"
-      - "go.sum"
-    cmds:
-      - echo "Running tests with coverage..."
-      - go test -cover ./...
-
-  test:race:
-    desc: Run tests with race condition detection
-    sources:
-      - "**/*.go"
-      - "go.mod"
-      - "go.sum"
-    cmds:
-      - echo "Running tests with race detection..."
-      - go test -race ./...
-
   run:
-    desc: Run the validator with default settings
+    desc: Run the validator (extra flags via `--`, e.g. `task run -- --json`)
     deps: [build]
     cmds:
-      - echo "Running {{.BINARY_NAME}}..."
-      - ./{{.BINARY_NAME}}
-
-  run:json:
-    desc: Run the validator with JSON output
-    deps: [build]
-    cmds:
-      - echo "Running {{.BINARY_NAME}} with JSON output..."
-      - ./{{.BINARY_NAME}} --json
-
-  update:deps:
-    desc: Update all Go dependencies
-    cmds:
-      - echo "Updating dependencies..."
-      - go get -u ./...
-      - go mod tidy
+      - ./{{.BINARY_NAME}} {{.CLI_ARGS}}
 
   ci:
-    desc: Run all checks for CI/CD pipelines
+    desc: Run lint + tests (CI pipeline)
     cmds:
-      - echo "Running CI checks..."
-      - task: quality
-      - task: test
-
-  pre-commit:
-    desc: Run checks before committing
-    cmds:
-      - echo "Running pre-commit checks..."
-      - task: quality
+      - task: lint
       - task: test
