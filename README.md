@@ -1,5 +1,7 @@
 # Obsidian Tools
 
+> **Archived.** This repository is no longer maintained.
+
 A workspace of Go tools for Obsidian plugin development. Currently ships one tool: `validate-plugin-manifest`, a local pre-flight check that approximates the rules Obsidian's [validate-plugin-entry workflow](https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/validate-plugin-entry.yml) applies when reviewing community plugins.
 
 This README is for maintainers. End-user usage is summarized briefly at the bottom.
